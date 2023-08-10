@@ -74,7 +74,7 @@ def extract_content_from_url(url: str):
 def extract_structured_data(content: str, data_points):
     llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
     template = """
-    You are an expert admin people who will extract core information from documents
+    You are an expert admin person who will extract core information from documents
 
     {content}
 
@@ -82,7 +82,7 @@ def extract_structured_data(content: str, data_points):
     and export in a JSON array format:
     {data_points}
 
-    Now please extract details from the content  and export in a JSON array format, 
+    Now please extract details from the content and export in a JSON array format, 
     return ONLY the JSON array:
     """
 
