@@ -16,7 +16,7 @@ import os
 from pytesseract import pytesseract
 import time
 # Set the path for tesseract
-pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Change this to the path where tesseract is installed
+#pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Change this to the path where tesseract is installed
 
 load_dotenv()
 
