@@ -14,7 +14,7 @@ import json
 import requests
 import os
 from pytesseract import pytesseract
-
+import time
 # Set the path for tesseract
 pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Change this to the path where tesseract is installed
 
@@ -134,6 +134,13 @@ def main():
                     results.extend(json_data)  # Use extend() for lists
                 else:
                     results.append(json_data)  # Wrap the dict in a list
+
+    # Manually delete the file after processing
+    #try:
+    #    os.remove(f.name)
+    #except OSError as e:
+    #    st.error(f"Error deleting file {f.name}: {e}")
+
 
         if len(results) > 0:
             try:
