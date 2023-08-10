@@ -121,7 +121,7 @@ def main():
     if uploaded_files is not None and data_points is not None:
         results = []
         for file in uploaded_files:
-            with NamedTemporaryFile(dir='.', suffix='.pdf', delete=False) as f:
+            with NamedTemporaryFile(dir='.', suffix='.pdf', delete=True) as f:
                 f.write(file.getbuffer())
                 if os.path.exists(f.name):
                     st.write(f"The file {f.name} exists!")
