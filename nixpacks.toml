@@ -1,3 +1,6 @@
 [phases.tesseract]
-cmds = ["sudo apt update", "sudo apt install tesseract-ocr"]
+cmds = [
+  "apt update",
+  "apt install tesseract-ocr"
+]
 dependsOn = ["install"]
