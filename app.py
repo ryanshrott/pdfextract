@@ -24,7 +24,6 @@ load_dotenv()
 
 
 def convert_pdf_to_images(file_path, scale=300/72):
-    st.write(file_path)
     pdf_file = pdfium.PdfDocument(file_path)
 
     page_indices = [i for i in range(len(pdf_file))]
@@ -144,6 +143,7 @@ def main():
 
         if len(results) > 0:
             try:
+                st.balloons()
                 df = pd.DataFrame(results)
                 st.subheader("Results")
                 st.data_editor(df)
