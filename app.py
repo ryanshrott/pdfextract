@@ -22,7 +22,16 @@ load_dotenv()
 
 # 1. Convert PDF file into images via pypdfium2
 
-
+def extract_content_from_file(file_path: str, file_type: str):
+    if file_type == 'pdf':
+        images_list = convert_pdf_to_images(file_path)
+        return extract_text_from_img(images_list)
+    elif file_type == 'jpeg':
+        with open(file_path, 'rb') as f:
+            image_bytes = f.read()
+        image = Image.open(BytesIO(image_bytes))
+        return image_to_string(image)
+    
 def convert_pdf_to_images(file_path, scale=300/72):
     st.write(file_path)
     pdf_file = pdfium.PdfDocument(file_path)
@@ -97,8 +106,6 @@ def extract_structured_data(content: str, data_points):
 
     return results
 
-
-
 # 5. Streamlit app
 def main():
     default_data_points = """{
@@ -108,39 +115,35 @@ def main():
         "invoice_date": "when was the invoice issued",
     }"""
 
-    st.set_page_config(page_title="JVL PDF Doc extraction", page_icon=":bird:")
+    st.set_page_config(page_title="JVL Doc extraction", page_icon=":bird:")
 
-    st.header("JVL PDF Doc extraction 🎰")
+    st.header("JVL Doc extraction 🎰")
 
     data_points = st.text_area(
         "Data points", value=default_data_points, height=170)
 
+    # Allow the user to upload both PDFs and JPEGs
     uploaded_files = st.file_uploader(
-        "upload PDFs", accept_multiple_files=True)
+        "Upload PDFs or JPEGs", accept_multiple_files=True, type=['pdf', 'jpeg'])
 
     if uploaded_files is not None and data_points is not None:
         results = []
         for file in uploaded_files:
-            with NamedTemporaryFile(dir='.', suffix='.pdf', delete=False) as f:
+            # Check the file type to determine how to process it
+            file_type = file.type.split('/')[-1]
+            with NamedTemporaryFile(dir='.', suffix=f'.{file_type}', delete=False) as f:
                 f.write(file.getbuffer())
                 if os.path.exists(f.name):
                     st.write(f"The file {f.name} exists!")
                 else:
                     st.write(f"The file {f.name} does not exist!")
-                content = extract_content_from_url(f.name)
+                content = extract_content_from_file(f.name, file_type)
                 data = extract_structured_data(content, data_points)
                 json_data = json.loads(data)
                 if isinstance(json_data, list):
-                    results.extend(json_data)  # Use extend() for lists
+                    results.extend(json_data)
                 else:
-                    results.append(json_data)  # Wrap the dict in a list
-
-    # Manually delete the file after processing
-    #try:
-    #    os.remove(f.name)
-    #except OSError as e:
-    #    st.error(f"Error deleting file {f.name}: {e}")
-
+                    results.append(json_data)
 
         if len(results) > 0:
             try:
