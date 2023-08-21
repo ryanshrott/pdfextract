@@ -133,7 +133,7 @@ def main():
 
     # Allow the user to upload both PDFs and JPEGs
     uploaded_files = st.file_uploader(
-        "Upload PDFs or JPEGs", accept_multiple_files=True, type=['pdf', 'jpeg'])
+        "Upload PDFs or JPEGs/PNGs", accept_multiple_files=True, type=['pdf', 'jpeg', 'png'])
 
     if uploaded_files is not None and data_points is not None:
         results = []
@@ -147,6 +147,7 @@ def main():
                 else:
                     st.write(f"The file {f.name} does not exist!")
                 content = extract_content_from_file(f.name, file_type)
+                st.write(content)
                 data = extract_structured_data(content, data_points)
                 json_data = json.loads(data)
                 if isinstance(json_data, list):
@@ -156,6 +157,7 @@ def main():
 
         if len(results) > 0:
             try:
+                st.write(results)
                 df = pd.DataFrame(results)
                 st.subheader("Results")
                 st.data_editor(df)
