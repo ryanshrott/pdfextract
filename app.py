@@ -20,6 +20,16 @@ import time
 
 load_dotenv()
 
+def extract_content_from_file(file_path: str, file_type: str):
+    if file_type == 'pdf':
+        images_list = convert_pdf_to_images(file_path)
+        return extract_text_from_img(images_list)
+    elif file_type == 'jpeg':
+        with open(file_path, 'rb') as f:
+            image_bytes = f.read()
+        image = Image.open(BytesIO(image_bytes))
+        return image_to_string(image)
+
 # 1. Convert PDF file into images via pypdfium2
 
 def extract_content_from_file(file_path: str, file_type: str):
@@ -33,7 +43,6 @@ def extract_content_from_file(file_path: str, file_type: str):
         return image_to_string(image)
     
 def convert_pdf_to_images(file_path, scale=300/72):
-    st.write(file_path)
     pdf_file = pdfium.PdfDocument(file_path)
 
     page_indices = [i for i in range(len(pdf_file))]
@@ -83,7 +92,7 @@ def extract_content_from_url(url: str):
 def extract_structured_data(content: str, data_points):
     llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
     template = """
-    You are an expert admin people who will extract core information from documents
+    You are an expert admin person who will extract core information from documents
 
     {content}
 
@@ -91,7 +100,7 @@ def extract_structured_data(content: str, data_points):
     and export in a JSON array format:
     {data_points}
 
-    Now please extract details from the content  and export in a JSON array format, 
+    Now please extract details from the content and export in a JSON array format, 
     return ONLY the JSON array:
     """
 
